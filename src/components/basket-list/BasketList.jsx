@@ -5,18 +5,18 @@ import { BasketContext } from '../context';
 import './BasketList.css'
 
 const BasketList = () => {
-    const {allProducts} = useContext(BasketContext);
-    const {orderPrice} = useContext(BasketContext);
-    const purchasedItems = Object.keys(sessionStorage);
+    const {allProducts, orderPrice,purchasedItems} = useContext(BasketContext);
+    // const renderPurchasedItems = 
 
-    const elements = allProducts.map (item => {
-        const {id, ...itemProps} = item;
-        let quantity=sessionStorage.getItem(id);
-        if (purchasedItems.includes(String(id)) && quantity>0)
-            return (
-            <BasketListItem key = {id} id={id} quantity={quantity} {...itemProps} />
-            )
-    })
+    const elements =  allProducts.map (item => {
+            const {id, ...itemProps} = item;
+            let quantity=sessionStorage.getItem(id);
+            if (purchasedItems.includes(String(id)) && quantity>0)
+                return (
+                <BasketListItem key = {id} id={id} quantity={quantity} {...itemProps} />
+                )
+        })
+
     if (orderPrice) {return (
         <div className="basket">
             <div className="basket__title">Корзина</div>

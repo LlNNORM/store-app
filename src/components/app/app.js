@@ -11,7 +11,7 @@ import Conditions from '../pages/Conditions';
 
 
 function App() {
-    
+
     return (
         <BasketProvider>
                 <Router>

@@ -102,3 +102,9 @@
     font-weight: 600;
     font-size: 15px;
 }
+
+.basket__item-bin:hover {
+
+    transform: scale(1.2);
+    transition: all 0.4s;
+ } 

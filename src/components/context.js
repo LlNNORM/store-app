@@ -3,6 +3,7 @@ import {createContext, useEffect, useState} from "react";
 export const BasketContext = createContext({});
 
 export const BasketProvider = ({children}) => {
+    
     const headphones = [
         {
             img: './icons/headphones/headphones1.png',
@@ -71,19 +72,8 @@ export const BasketProvider = ({children}) => {
         },
     ];
     const allProducts = [...headphones, ...wirelessHeadphones];
+    let purchasedItems = Object.keys(sessionStorage);
     const [count, setCount] = useState(0);
-
-    const onPurchase = (id) => {
-        setCount(count+1);
-        if (!sessionStorage.getItem(id)) {
-            sessionStorage.setItem(id, 1)
-        } else {for (let key in sessionStorage) {
-            if (+key===id) {sessionStorage.setItem(id, +sessionStorage.getItem(key)+1)}
-        }}
-        console.log(Object.keys(sessionStorage))
-        // sessionStorage.clear();
-        console.log(sessionStorage);
-    };
 
     const onAmountIncrease = (id) => {
         setCount(count+1);
@@ -98,6 +88,20 @@ export const BasketProvider = ({children}) => {
             if (+key===id) {sessionStorage.setItem(id, +sessionStorage.getItem(key)-1)}
         }
     };
+
+    const onPurchase = (id) => {
+        setCount(count+1);
+        if (!sessionStorage.getItem(id)) {
+            sessionStorage.setItem(id, 1)
+        } else onAmountIncrease(id);
+    };
+
+    const onItemDelete = (id) => {
+        console.log(purchasedItems);
+        return purchasedItems = purchasedItems.filter(key => +key!==id);
+        
+    }
+    
     let orderPrice = 0;
 
     const calculateOrderPrice = (allProducts)=> {
@@ -113,48 +117,9 @@ export const BasketProvider = ({children}) => {
 
     orderPrice = calculateOrderPrice(allProducts);
 
-    
-
-//   const [values, setValues] = useState(() => {
-//     const storedValuesJSON = sessionStorage.getItem('cart');
-//     try {
-//       return JSON.parse(storedValuesJSON) ?? {};
-//     } catch (e) {
-//       return {};
-//     }
-//   });
-
-//   useEffect(() => {
-//     sessionStorage.setItem('cart', JSON.stringify(values));
-//   }, [values]);
-
-//   console.log(values);
-
-//   const addProduct = (id) => {
-//     setValues(prev => {
-//       if (prev[id]) {
-//         return {...prev, [id]: prev[id] + 1};
-//       }
-
-//       return {...prev, [id]: 1};
-//     });
-//   }
-
-//   const removeProduct = (id) => {
-//     setValues(prev => {
-//       if (prev[id]) {
-//         return {...prev, [id]: prev[id] - 1};
-//       }
-
-//       return {...prev, [id]: 0};
-//     });
-//   }
-
-//   const deleteProduct = (id) => {
-//     setValues(prev => {
-//       return {...prev, [id]: undefined};
-//     });
-//   }
+    useEffect(() => {
+        sessionStorage.clear();
+      }, []);
 
   return (
     <BasketContext.Provider
@@ -163,9 +128,11 @@ export const BasketProvider = ({children}) => {
         onPurchase,
         onAmountDecrease,
         onAmountIncrease,
+        onItemDelete,
         headphones,
         wirelessHeadphones,
         allProducts,
+        purchasedItems,
         orderPrice,
       }}
     >
